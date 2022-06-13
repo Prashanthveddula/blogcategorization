@@ -3,8 +3,8 @@ import os
 from nltk import tokenize
 
 #open files
-f1 = open("article2.txt")
-f2 = open("countries.txt")
+f1 = open("docs/article1.txt")
+f2 = open("docs/countries.txt")
 article = f1.read()
 countries = f2.read()
 
