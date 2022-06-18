@@ -1,13 +1,18 @@
 import nltk
-import os
 from nltk import tokenize
+from nltk.tree import Tree
 
+nltk.download('words')
 
 #open files
-f1 = open("docs/article1.txt")
-f2 = open("docs/countries.txt")
-article = f1.read()
-countries = f2.read()
+article = open("docs/article3.txt", 'r').read()
+countries = open("docs/countries.txt", 'r').read()
+
+Indian = open("docs/India.txt", 'r').read()
+American = open("docs/USA.txt", 'r').read()
+Chinese = open("docs/China.txt", 'r').read()
+Russian = open("docs/Russia.txt", 'r').read()
+
 
 #returns a list of all country names from input text.
 def extract_countries(text, CountriesList):
@@ -23,7 +28,7 @@ def extract_countries(text, CountriesList):
 
 #return a list of all country names and nationalities('Ameriacan', 'Indian')
 def extract_countries2(text): 
-    sent = nltk.tokenize.wordpunct_tokenize(text)
+    sent = nltk.tokenize.word_tokenize(text)
     pos_tag = nltk.pos_tag(sent)
     nes = nltk.ne_chunk(pos_tag)
     places = []
@@ -34,6 +39,24 @@ def extract_countries2(text):
         
     return places
 
+#returns a list of all humans names in text
+def extract_names(text):
+    sent = nltk.word_tokenize(text)
+    pos_tag = nltk.pos_tag(sent)
+    nes = nltk.ne_chunk(pos_tag)
+    res = []
+    for ne in nes:
+        if type(ne) == Tree:
+            if (ne.label() == 'PERSON'):
+                res.append(u' '.join([i[0] for i in ne.leaves()]))
+
+    return res
+
 
 if __name__ == '__main__':
+    print(extract_countries(article, countries))
     print(extract_countries2(article))
+    print(extract_names(Indian))
+    print(extract_names(American))
+    print(extract_names(Chinese))
+    print(extract_names(Russian))
