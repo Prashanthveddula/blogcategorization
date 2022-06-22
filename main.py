@@ -86,7 +86,8 @@ def test_answer3():
     assert extract_names(Japanese) == ['Makoto', 'Makoto Shinkai']
 def test_answer4():
     assert extract_names(Russian) == ['Garry', 'Kimovich Kasparov']
-
+def test_answer5():
+    assert name_to_country(article2) == [('Helmut Kohl', 'German'), ('Satya Narayana Nadella', 'Not identified'), ('Garry Kimovich Kasparov', 'Russian'), ('Marques Keith Brownlee', 'English'), ('Makoto Niitsu', 'Not identified'), ('Makoto Shinkai', 'Not identified')]
 
 #driver code
 if __name__ == "__main__":
