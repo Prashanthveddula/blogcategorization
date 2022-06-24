@@ -15,84 +15,88 @@ American = open("docs/USA.txt", 'r').read()
 Japanese = open("docs/Japan.txt", 'r').read()
 Russian = open("docs/Russia.txt", 'r').read()
 article2 = open("docs/test.txt", 'r').read()
-dict = {}
+
+
+nameToCountryMap = {}
 with open("docs/name2lang.txt") as f:
     for line in f:
         temp = line.split(",")
-        x = temp[0].strip()
-        y = temp[1].strip()
-        dict[x] = y
+        name = temp[0].strip()
+        country = temp[1].strip()
+        nameToCountryMap[name] = country
 
 
 
-# Return a list of all country names and nationalities('Ameriacan', 'Indian')
-def extract_countries(text):
+# Return a list of all country names and nationalities('American', 'Indian')
+def extractCountries(text):
     sent = nltk.tokenize.word_tokenize(text)
     pos_tag = nltk.pos_tag(sent)
-    nes = nltk.ne_chunk(pos_tag)
+    namedEntities = nltk.ne_chunk(pos_tag)
     places = []
 
-    for ne in nes:
-        if type(ne) == nltk.tree.Tree:
-            if ne.label() == "GPE":
-                places.append(u" ".join([i[0] for i in ne.leaves()]))
+    for namedEntity in namedEntities:
+        if type(namedEntity ) == nltk.tree.Tree:
+            if namedEntity .label() == "GPE":
+                places.append(u" ".join([i[0] for i in namedEntity.leaves()]))
 
     return places
 
 
 # Returns a list of all humans names in text
-def extract_names(text):
+def extractNames(text):
     sent = nltk.word_tokenize(text)
     pos_tag = nltk.pos_tag(sent)
-    nes = nltk.ne_chunk(pos_tag)
+    namedEntities = nltk.ne_chunk(pos_tag)
     res = []
-    for ne in nes:
-        if type(ne) == nltk.tree.Tree:
-            if ne.label() == "PERSON":
-                res.append(u" ".join([i[0] for i in ne.leaves()]))
+    for namedEntity  in namedEntities:
+        if type(namedEntity ) == nltk.tree.Tree:
+            if namedEntity .label() == "PERSON":
+                res.append(u" ".join([i[0] for i in namedEntity.leaves()]))
 
     return res
 
 
 #Extracts humans names and returns their respective country
-def name_to_country(text):
+def nameToCountry(text):
     names = []
-    nametoc = []
-    nes = nltk.ne_chunk(nltk.pos_tag(nltk.word_tokenize(text)))
-    for n in nes:
-        if type(n) == nltk.tree.Tree:
-            if n.label() == "PERSON":
-                name = f" ".join(i[0] for i in n.leaves())
+    nameToCountryPairs = []
+    namedEntities = nltk.ne_chunk(nltk.pos_tag(nltk.word_tokenize(text)))
+    for namedEntity in namedEntities:
+        if type(namedEntity ) == nltk.tree.Tree:
+            if namedEntity .label() == "PERSON":
+                name = f" ".join(i[0] for i in namedEntity.leaves())
                 names.append(name)
-    for j in names:
-        temp = j.split(" ")
+
+    for name in names:
+        tokens = name.split(" ")
         found = False
-        for k in temp:
-            if k in dict:
-                nametoc.append((j, dict[k]))
+        for token in tokens:
+            if token in nameToCountryMap:
+                nameToCountryPairs.append((name, nameToCountryMap[token]))
                 found = True
                 break
         if found == False:
-            nametoc.append((j, 'Not identified'))
-    return nametoc
+            nameToCountryPairs.append((name, 'Not identified'))
+    return nameToCountryPairs
 
 
 #pytest for extracting names
-def test_answer1():
-    assert extract_names(Indian) == ['Satya', 'Narayana Nadella']
-def test_answer2():
-    assert extract_names(American) == ['Marques', 'Keith Brownlee']
-def test_answer3():
-    assert extract_names(Japanese) == ['Makoto', 'Makoto Shinkai']
-def test_answer4():
-    assert extract_names(Russian) == ['Garry', 'Kimovich Kasparov']
-def test_answer5():
-    assert name_to_country(article2) == [('Helmut Kohl', 'German'), ('Satya Narayana Nadella', 'Not identified'), ('Garry Kimovich Kasparov', 'Russian'), ('Marques Keith Brownlee', 'English'), ('Makoto Niitsu', 'Not identified'), ('Makoto Shinkai', 'Not identified')]
+def testAnswer1():
+    assert extractNames(Indian) == ['Satya', 'Narayana Nadella']
+def testAnswer2():
+    assert extractNames(American) == ['Marques', 'Keith Brownlee']
+def testAnswer3():
+    assert extractNames(Japanese) == ['Makoto', 'Makoto Shinkai']
+def testAnswer4():
+    assert extractNames(Russian) == ['Garry', 'Kimovich Kasparov']
+def testAnswer5():
+    assert nameToCountry(article2) == [('Helmut Kohl', 'German'), ('Satya Narayana Nadella', 'Not identified'), ('Garry Kimovich Kasparov', 'Russian'), ('Marques Keith Brownlee', 'English'), ('Makoto Niitsu', 'Not identified'), ('Makoto Shinkai', 'Not identified')]
+
 
 #driver code
 if __name__ == "__main__":
-    print(extract_names(Indian))
-    print(extract_names(American))
-    print(extract_names(Japanese))
-    print(extract_names(Russian))
-    print(name_to_country(article2))
+    print(extractNames(Indian))
+    print(extractNames(American))
+    print(extractNames(Japanese))
+    print(extractNames(Russian))
+    print(nameToCountry(article2))
