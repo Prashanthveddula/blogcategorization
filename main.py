@@ -1,5 +1,5 @@
 import nltk
-
+import numpy
 
 nltk.download("punkt")
 nltk.download("averaged_perceptron_tagger")
