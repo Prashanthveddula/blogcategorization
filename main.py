@@ -16,7 +16,7 @@ Japanese = open("docs/Japan.txt", 'r').read()
 Russian = open("docs/Russia.txt", 'r').read()
 article2 = open("docs/test.txt", 'r').read()
 
-
+print('hellow')
 nameToCountryMap = {}
 with open("docs/name2lang.txt") as f:
     for line in f:
