@@ -1,5 +1,7 @@
 import nltk
 import numpy
+import re
+
 
 nltk.download("punkt")
 nltk.download("averaged_perceptron_tagger")
@@ -15,8 +17,9 @@ American = open("docs/USA.txt", 'r').read()
 Japanese = open("docs/Japan.txt", 'r').read()
 Russian = open("docs/Russia.txt", 'r').read()
 article2 = open("docs/test.txt", 'r').read()
+num = open("docs/num.txt", 'r').read()
 
-print('hellow')
+
 nameToCountryMap = {}
 with open("docs/name2lang.txt") as f:
     for line in f:
@@ -79,6 +82,11 @@ def nameToCountry(text):
             nameToCountryPairs.append((name, 'Not identified'))
     return nameToCountryPairs
 
+#regex pattern to find all numbers in the text
+def numbers(rtext):
+    out = re.findall("[-+]?[.]?[\d]+(?:,\d\d\d)*[\.]?\d*(?:[eE][-+]?\d+)?", rtext)
+    return out
+
 
 #pytest for extracting names
 def testAnswer1():
@@ -91,7 +99,8 @@ def testAnswer4():
     assert extractNames(Russian) == ['Garry', 'Kimovich Kasparov']
 def testAnswer5():
     assert nameToCountry(article2) == [('Helmut Kohl', 'German'), ('Satya Narayana Nadella', 'Not identified'), ('Garry Kimovich Kasparov', 'Russian'), ('Marques Keith Brownlee', 'English'), ('Makoto Niitsu', 'Not identified'), ('Makoto Shinkai', 'Not identified')]
-
+def testAnswer6():
+    assert numbers(num) == ['8', '15', '2022.', '8.5', '2030', '9.7', '2050', '10.4', '2100.', '72.8', '2019', '9', '1990.', '77.2', '2050.']
 
 #driver code
 if __name__ == "__main__":
@@ -100,3 +109,4 @@ if __name__ == "__main__":
     print(extractNames(Japanese))
     print(extractNames(Russian))
     print(nameToCountry(article2))
+    print(numbers(num))
